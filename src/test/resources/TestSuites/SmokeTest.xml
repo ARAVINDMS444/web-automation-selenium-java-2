@@ -3,11 +3,10 @@
     <listeners>
         <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
     </listeners>
-
     <test name="SmokeTest" parallel="none">
         <parameter name="browser" value="chrome"/>
         <packages>
-            <package name="SmokeTests"/>
+            <package name="smoketests"/>
         </packages>
     </test>
 </suite>
