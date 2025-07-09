@@ -55,7 +55,7 @@
         <version>3.2.5</version>
         <configuration>
           <suiteXmlFiles>
-            <suiteXmlFile>src/test/resources/testsuites/SmokeTest.xml</suiteXmlFile>
+            <suiteXmlFile>src/test/resources/TestSuites/SmokeTest.xml</suiteXmlFile>
           </suiteXmlFiles>
         </configuration>
       </plugin>

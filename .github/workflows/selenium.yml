@@ -25,11 +25,10 @@ jobs:
         with:
           path: ~/.m2
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven
+          restore-keys: ${{ runner.os }}-maven
 
-      - name: Run Tests using suite
-        run: mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testsuites/SmokeTest.xml
+      - name: Run Tests with Maven
+        run: mvn clean test
 
       - name: Upload Allure Results
         if: always()

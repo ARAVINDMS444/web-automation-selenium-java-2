@@ -6,7 +6,7 @@
     <test name="SmokeTest" parallel="none">
         <parameter name="browser" value="chrome"/>
         <packages>
-            <package name="smoketests"/>
+            <package name="SmokeTests"/>
         </packages>
     </test>
 </suite>
