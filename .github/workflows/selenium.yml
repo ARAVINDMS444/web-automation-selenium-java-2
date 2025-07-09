@@ -5,6 +5,8 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  schedule:
+    - cron: '30 11 * * *'
 
 jobs:
   test:
@@ -32,3 +34,27 @@ jobs:
         run: |
           SUITES=$(find src/test/resources/TestSuites -name "*.xml" | paste -sd "," -)
           mvn clean test -Dsurefire.suiteXmlFiles=$SUITES
+
+      - name: Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: target/allure-results
+
+      - name: Install Allure CLI
+        run: |
+          sudo apt-add-repository ppa:qameta/allure -y
+          sudo apt-get update
+          sudo apt-get install allure -y
+
+      - name: Generate Allure HTML Report
+        run: |
+          allure generate target/allure-results --clean -o target/allure-report
+
+      - name: Upload Allure HTML Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: target/allure-report
