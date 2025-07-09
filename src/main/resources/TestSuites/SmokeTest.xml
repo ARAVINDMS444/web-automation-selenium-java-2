@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="SmokeTestSuite">
+    <listeners>
+        <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
+    </listeners>
+
+    <test name="SmokeTest" parallel="none">
+        <parameter name="browser" value="chrome"/>
+        <packages>
+            <package name="SmokeTests"/>
+        </packages>
+    </test>
+</suite>
