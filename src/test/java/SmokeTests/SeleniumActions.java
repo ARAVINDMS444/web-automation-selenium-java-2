@@ -13,6 +13,8 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Listeners(utils.Listeners.class)
@@ -171,5 +173,49 @@ public class SeleniumActions extends BaseTest {
         WebElement formModalCloseButton = driver.findElement(By.xpath("//div[@id='popmake-674']//button[@aria-label='Close'][normalize-space()='×']"));
         formModalCloseButton.click();
         Thread.sleep(2000);
+    }
+
+    @Test(priority = 12)
+    public void testCalendar() throws InterruptedException {
+        driver.get("https://practice-automation.com/calendars/");
+        Thread.sleep(2000);
+        WebElement selectDate = driver.findElement(By.xpath("//input[@id='g1065-2-1-selectorenteradate']"));
+        selectDate.click();
+        Thread.sleep(2000);
+        WebElement nextMonth = driver.findElement(By.xpath("//button[normalize-space()='Next Month']"));
+        nextMonth.click();
+        Thread.sleep(2000);
+        WebElement date = driver.findElement(By.xpath("//button[normalize-space()='25']"));
+        date.click();
+        Thread.sleep(2000);
+        WebElement submitButton = driver.findElement(By.xpath("(//button[@type='submit'])[1]"));
+        submitButton.click();
+    }
+
+    @Test(priority = 13)
+    public void testTables() throws InterruptedException {
+        driver.get("https://practice-automation.com/tables/");
+        Thread.sleep(2000);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("window.scrollBy(0,500)");
+        Thread.sleep(3000);
+        WebElement populationHeader = driver.findElement(By.xpath("//span[normalize-space()='Population (million)']"));
+        populationHeader.click();
+        List<WebElement> population = driver.findElements(By.xpath("(//table)[2]/tbody/tr/td[3]"));
+        ArrayList<Float> numbers = new ArrayList<>();
+
+        for (WebElement el : population) {
+            numbers.add(Float.parseFloat(el.getText().trim()));
+        }
+
+        boolean isAscending = true;
+        for (int i = 0; i < numbers.size() - 1; i++) {
+            if (numbers.get(i) > numbers.get(i + 1)) {
+                isAscending = false;
+                break;
+            }
+        }
+
+        Assert.assertTrue(isAscending);
     }
 }
