@@ -21,7 +21,7 @@ public class BaseTest {
             case "chrome":
                 ChromeOptions chromeOptions = new ChromeOptions();
                 WebDriverManager.chromedriver().setup();
-                //chromeOptions.addArguments("--headless");
+                chromeOptions.addArguments("--headless");
                 chromeOptions.addArguments("--remote-allow-origins=*");
                 chromeOptions.addArguments("--incognito");
                 driver = new ChromeDriver(chromeOptions);
