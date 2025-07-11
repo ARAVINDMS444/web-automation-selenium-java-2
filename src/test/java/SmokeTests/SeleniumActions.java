@@ -11,7 +11,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -203,19 +202,16 @@ public class SeleniumActions extends BaseTest {
         populationHeader.click();
         List<WebElement> population = driver.findElements(By.xpath("(//table)[2]/tbody/tr/td[3]"));
         ArrayList<Float> numbers = new ArrayList<>();
-
-        for (WebElement el : population) {
-            numbers.add(Float.parseFloat(el.getText().trim()));
+        for (WebElement webElement : population) {
+            numbers.add(Float.parseFloat(webElement.getText()));
         }
-
-        boolean isAscending = true;
-        for (int i = 0; i < numbers.size() - 1; i++) {
+        boolean flag = true;
+        for (int i = 0; i < numbers.size()-1; i++) {
             if (numbers.get(i) > numbers.get(i + 1)) {
-                isAscending = false;
+                flag = false;
                 break;
             }
         }
-
-        Assert.assertTrue(isAscending);
+        Assert.assertTrue(flag);
     }
 }
