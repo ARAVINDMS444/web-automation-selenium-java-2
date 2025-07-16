@@ -7,25 +7,32 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
-
+import org.testng.annotations.*;
 import java.time.Duration;
+import java.util.logging.*;
 
 public class BaseTest {
 
-    private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
+    private static final ThreadLocal<WebDriver> driver = new ThreadLocal<>();
 
     public WebDriver getDriver() {
         return driver.get();
     }
 
+    @BeforeSuite
+    public void suppressSeleniumLogs() {
+        LogManager.getLogManager().reset();
+        Logger seleniumLogger = Logger.getLogger("org.openqa.selenium");
+        seleniumLogger.setLevel(Level.SEVERE);
+        ConsoleHandler handler = new ConsoleHandler();
+        handler.setLevel(Level.SEVERE);
+        seleniumLogger.addHandler(handler);
+    }
+
     @BeforeMethod(alwaysRun = true)
     @Parameters("browser")
     public void setUp(@Optional("chrome") String browser) {
-        WebDriver localDriver = null;
+        WebDriver localDriver;
         switch (browser.toLowerCase()) {
             case "chrome":
                 ChromeOptions chromeOptions = new ChromeOptions();
