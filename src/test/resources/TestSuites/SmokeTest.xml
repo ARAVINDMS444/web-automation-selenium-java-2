@@ -3,7 +3,7 @@
     <listeners>
         <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
     </listeners>
-    <test name="SmokeTest" parallel="none">
+    <test name="SmokeTest" parallel="classes" thread-count="3">
         <parameter name="browser" value="chrome"/>
         <packages>
             <package name="SmokeTests"/>

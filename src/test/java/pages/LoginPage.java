@@ -2,6 +2,7 @@ package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import utils.Constants;
 
 public class LoginPage {
 
@@ -20,6 +21,7 @@ public class LoginPage {
     private final By toastErrorMessage = By.xpath("//div[@id='flash']");
 
     public void verifyLoginLogoutFlow(String username, String password) throws InterruptedException {
+        driver.get(Constants.baseUrl);
         driver.findElement(usernameTextbox).sendKeys(username);
         driver.findElement(passwordTextbox).sendKeys(password);
         driver.findElement(signInButton).click();
@@ -33,6 +35,7 @@ public class LoginPage {
     }
 
     public void verifyInvalidLogin(String username, String password) throws InterruptedException {
+        driver.get(Constants.baseUrl);
         driver.findElement(usernameTextbox).sendKeys(username);
         driver.findElement(passwordTextbox).sendKeys(password);
         driver.findElement(signInButton).click();

@@ -11,7 +11,7 @@ public class PracticeTest2 extends BaseTest {
 
     @Test(priority = 1)
     public void verifySortByAscendingOrder() throws InterruptedException {
-        TablePage tablePage = new TablePage(driver);
+        TablePage tablePage = new TablePage(getDriver());
         tablePage.verifyTableSort();
     }
 }

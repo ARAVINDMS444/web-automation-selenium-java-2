@@ -1,217 +1,169 @@
 package SmokeTests;
 
 import BaseTest.BaseTest;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.*;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Listeners(utils.Listeners.class)
 
 public class SeleniumActions extends BaseTest {
 
+    WebDriverWait wait;
+
+    public void openUrl(String url) {
+        getDriver().get(url);
+        wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
+    }
+
     @Test(priority = 1)
-    public void testAlerts() throws InterruptedException {
-        driver.get("https://practice-automation.com/popups/");
-        WebElement element = driver.findElement(By.xpath("//b[normalize-space()='Prompt Popup']"));
+    public void testAlerts() {
+        openUrl("https://practice-automation.com/popups/");
+        WebElement element = getDriver().findElement(By.xpath("//b[normalize-space()='Prompt Popup']"));
         element.click();
-        Thread.sleep(2000);
-        driver.switchTo().alert().sendKeys("Test");
-        Thread.sleep(2000);
-        String alertText = driver.switchTo().alert().getText();
-        Assert.assertEquals(alertText, "Hi there, what's your name?");
-        driver.switchTo().alert().dismiss();
-        Thread.sleep(2000);
+        wait.until(ExpectedConditions.alertIsPresent());
+
+        Alert alert = getDriver().switchTo().alert();
+        alert.sendKeys("Test");
+        Assert.assertEquals(alert.getText(), "Hi there, what's your name?");
+        alert.dismiss();
+
         element.click();
-        Thread.sleep(2000);
-        driver.switchTo().alert().accept();
+        wait.until(ExpectedConditions.alertIsPresent());
+        getDriver().switchTo().alert().accept();
     }
 
     @Test(priority = 2)
     public void testExplicitWaits() {
-        driver.get("https://practice-automation.com/javascript-delays/");
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@id='start']")));
-        WebElement element = driver.findElement(By.xpath("//button[@id='start']"));
-        element.click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[text()='Liftoff!']")));
-        WebElement successText = driver.findElement(By.xpath("//div[text()='Liftoff!']"));
+        openUrl("https://practice-automation.com/javascript-delays/");
+        WebElement startBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("start")));
+        startBtn.click();
+        WebElement successText = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[text()='Liftoff!']")));
         Assert.assertEquals(successText.getText(), "Liftoff!");
     }
 
     @Test(priority = 3)
-    public void testDropdown() throws InterruptedException {
-        driver.get("https://practice-automation.com/form-fields/");
-        WebElement dropdown = driver.findElement(By.xpath("//select[@id='automation']"));
-        Select select = new Select(dropdown);
+    public void testDropdown() {
+        openUrl("https://practice-automation.com/form-fields/");
+        Select select = new Select(getDriver().findElement(By.id("automation")));
         select.selectByVisibleText("Yes");
-        Thread.sleep(2000);
         select.selectByValue("no");
-        Thread.sleep(2000);
         select.selectByIndex(1);
-        Thread.sleep(2000);
-    }
-
-    @Test(priority = 3)
-    public void testDragAndDrop() throws InterruptedException {
-        driver.get("https://practice-automation.com/gestures/");
-        WebElement element = driver.findElement(By.xpath("//p[normalize-space()='Drag and drop the image from one box to the other.']"));
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].scrollIntoView(true);", element);
-        Thread.sleep(2000);
-        WebElement dragElement = driver.findElement(By.xpath("//img[@id='dragMe']"));
-        WebElement dropElement = driver.findElement(By.xpath("//div[@id='div2']"));
-        Actions actions = new Actions(driver);
-        actions.dragAndDrop(dragElement, dropElement).build().perform();
     }
 
     @Test(priority = 4)
-    public void testWindowHandling() throws InterruptedException {
-        driver.get("https://practice-automation.com/window-operations/");
-        Thread.sleep(2000);
-        WebElement element = driver.findElement(By.xpath("//button[contains(@onclick,'newTab()')]"));
-        element.click();
-       String parentWindow = driver.getWindowHandle();
-       Set<String> allWindows = driver.getWindowHandles();
-
-       for (String window : allWindows) {
-           if (!window.equals(parentWindow)) {
-                driver.switchTo().window(window);
-                Thread.sleep(2000);
-                String text = driver.findElement(By.xpath("//strong[normalize-space()='Start learning']")).getText();
-                Assert.assertEquals(text, "Start learning");
-                driver.close();
-           }
-           driver.switchTo().window(parentWindow);
-       }
+    public void testDragAndDrop() {
+        openUrl("https://practice-automation.com/gestures/");
+        WebElement text = getDriver().findElement(By.xpath("//p[contains(text(),'Drag and drop')]"));
+        ((JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);", text);
+        WebElement drag = getDriver().findElement(By.id("dragMe"));
+        WebElement drop = getDriver().findElement(By.id("div2"));
+        new Actions(getDriver()).dragAndDrop(drag, drop).build().perform();
     }
 
     @Test(priority = 5)
-    public void testMouseHover() throws InterruptedException {
-        driver.get("https://practice-automation.com/hover/");
-        Thread.sleep(2000);
-        WebElement element = driver.findElement(By.xpath("//h3[@id='mouse_over']"));
-        Actions actions = new Actions(driver);
-        actions.moveToElement(element).build().perform();
+    public void testWindowHandling() {
+        openUrl("https://practice-automation.com/window-operations/");
+        String parentWindow = getDriver().getWindowHandle();
+        getDriver().findElement(By.xpath("//button[contains(@onclick,'newTab()')]")).click();
+
+        Set<String> allWindows = getDriver().getWindowHandles();
+        for (String window : allWindows) {
+            if (!window.equals(parentWindow)) {
+                getDriver().switchTo().window(window);
+                WebElement text = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//strong[normalize-space()='Start learning']")));
+                Assert.assertEquals(text.getText(), "Start learning");
+                getDriver().close();
+            }
+        }
+        getDriver().switchTo().window(parentWindow);
     }
 
     @Test(priority = 6)
-    public void testFileDownload() throws InterruptedException {
-        driver.get("https://practice-automation.com/file-download/");
-        Thread.sleep(2000);
-        WebElement element = driver.findElement(By.xpath("//a[@class='wpdm-download-link download-on-click btn btn-primary ']"));
-        element.click();
-        Thread.sleep(5000);
+    public void testMouseHover() {
+        openUrl("https://practice-automation.com/hover/");
+        WebElement element = getDriver().findElement(By.id("mouse_over"));
+        new Actions(getDriver()).moveToElement(element).perform();
     }
 
     @Test(priority = 7)
-    public void testFrameHandling() throws InterruptedException {
-        driver.get("https://practice-automation.com/iframes/");
-        Thread.sleep(2000);
-        WebElement iframe = driver.findElement(By.xpath("//iframe"));
-        driver.switchTo().frame(iframe);
-        String text = driver.findElement(By.tagName("h1")).getText();
-        Assert.assertEquals(text, "Playwright enables reliable end-to-end testing for modern web apps.");
-        driver.switchTo().defaultContent();
+    public void testFileDownload() {
+        openUrl("https://practice-automation.com/file-download/");
+        WebElement downloadLink = getDriver().findElement(By.xpath("//a[contains(@class, 'download-on-click')]"));
+        downloadLink.click();
     }
 
     @Test(priority = 8)
-    public void testSliders() throws InterruptedException {
-        driver.get("https://practice-automation.com/slider/");
-        Thread.sleep(2000);
-        WebElement slider = driver.findElement(By.xpath("//input[@id='slideMe']"));
-        Actions action = new Actions(driver);
-        action.dragAndDropBy(slider, 200, 0).build().perform();
-        WebElement expectedText = driver.findElement(By.xpath("//span[text()='65']"));
-        Assert.assertEquals(expectedText.getText(), "65");
+    public void testFrameHandling() {
+        openUrl("https://practice-automation.com/iframes/");
+        WebElement iframe = getDriver().findElement(By.tagName("iframe"));
+        getDriver().switchTo().frame(iframe);
+        String text = getDriver().findElement(By.tagName("h1")).getText();
+        Assert.assertTrue(text.contains("Playwright enables reliable"));
+        getDriver().switchTo().defaultContent();
     }
 
     @Test(priority = 9)
-    public void testFileUpload() throws InterruptedException {
-        driver.get("https://practice-automation.com/file-upload/");
-        Thread.sleep(2000);
-        WebElement fileUploadButton = driver.findElement(By.xpath("//input[@id='file-upload']"));
-        fileUploadButton.sendKeys("/Users/aravindms/Downloads/test.pdf");
-        Thread.sleep(2000);
-        WebElement uploadButton = driver.findElement(By.xpath("//input[@id='upload-btn']"));
-        uploadButton.click();
-        WebElement successText = driver.findElement(By.xpath("//div[text()='Thank you for your message. It has been sent.']"));
-        Assert.assertEquals(successText.getText(), "Thank you for your message. It has been sent.");
+    public void testSliders() {
+        openUrl("https://practice-automation.com/slider/");
+        WebElement slider = getDriver().findElement(By.id("slideMe"));
+        new Actions(getDriver()).dragAndDropBy(slider, 200, 0).build().perform();
+        WebElement label = getDriver().findElement(By.xpath("//span[text()='65']"));
+        Assert.assertEquals(label.getText(), "65");
     }
 
     @Test(priority = 10)
-    public void testAccordions() throws InterruptedException {
-        driver.get("https://practice-automation.com/accordions/");
-        Thread.sleep(2000);
-        WebElement accordionText = driver.findElement(By.xpath("//summary[@class='wp-block-coblocks-accordion-item__title']"));
-        accordionText.click();
-        Thread.sleep(2000);
-        WebElement successText = driver.findElement(By.xpath("//p[normalize-space()='This is an accordion item.']"));
-        Assert.assertEquals(successText.getText(), "This is an accordion item.");
+    public void testFileUpload() {
+        openUrl("https://practice-automation.com/file-upload/");
+        getDriver().findElement(By.id("file-upload")).sendKeys("/Users/aravindms/Downloads/test.pdf");
+        getDriver().findElement(By.id("upload-btn")).click();
+        WebElement successText = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[text()='Thank you for your message. It has been sent.']")));
+        Assert.assertEquals(successText.getText(), "Thank you for your message. It has been sent.");
     }
 
     @Test(priority = 11)
-    public void testModals() throws InterruptedException {
-        driver.get("https://practice-automation.com/modals/");
-        Thread.sleep(2000);
-        WebElement formModal = driver.findElement(By.xpath("//button[@id='formModal']"));
-        formModal.click();
-        Thread.sleep(2000);
-        WebElement nameField = driver.findElement(By.xpath("//input[@id='g1051-name']"));
-        nameField.sendKeys("Test");
-        WebElement formModalCloseButton = driver.findElement(By.xpath("//div[@id='popmake-674']//button[@aria-label='Close'][normalize-space()='×']"));
-        formModalCloseButton.click();
-        Thread.sleep(2000);
+    public void testAccordions() {
+        openUrl("https://practice-automation.com/accordions/");
+        getDriver().findElement(By.xpath("//summary[contains(@class,'accordion-item__title')]")).click();
+        WebElement accordionText = getDriver().findElement(By.xpath("//p[normalize-space()='This is an accordion item.']"));
+        Assert.assertEquals(accordionText.getText(), "This is an accordion item.");
     }
 
     @Test(priority = 12)
-    public void testCalendar() throws InterruptedException {
-        driver.get("https://practice-automation.com/calendars/");
-        Thread.sleep(2000);
-        WebElement selectDate = driver.findElement(By.xpath("//input[@id='g1065-2-1-selectorenteradate']"));
-        selectDate.click();
-        Thread.sleep(2000);
-        WebElement nextMonth = driver.findElement(By.xpath("//button[normalize-space()='Next Month']"));
-        nextMonth.click();
-        Thread.sleep(2000);
-        WebElement date = driver.findElement(By.xpath("//button[normalize-space()='25']"));
-        date.click();
-        Thread.sleep(2000);
-        WebElement submitButton = driver.findElement(By.xpath("(//button[@type='submit'])[1]"));
-        submitButton.click();
+    public void testModals() {
+        openUrl("https://practice-automation.com/modals/");
+        getDriver().findElement(By.id("formModal")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("g1051-name"))).sendKeys("Test");
+        getDriver().findElement(By.xpath("//div[@id='popmake-674']//button[@aria-label='Close']")).click();
     }
 
     @Test(priority = 13)
+    public void testCalendar() {
+        openUrl("https://practice-automation.com/calendars/");
+        getDriver().findElement(By.id("g1065-2-1-selectorenteradate")).click();
+        getDriver().findElement(By.xpath("//button[normalize-space()='Next Month']")).click();
+        getDriver().findElement(By.xpath("//button[normalize-space()='25']")).click();
+        getDriver().findElement(By.xpath("(//button[@type='submit'])[1]")).click();
+    }
+
+    @Test(priority = 14)
     public void testTables() throws InterruptedException {
-        driver.get("https://practice-automation.com/tables/");
-        Thread.sleep(2000);
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("window.scrollBy(0,500)");
+        openUrl("https://practice-automation.com/tables/");
+        ((JavascriptExecutor) getDriver()).executeScript("window.scrollBy(0,500)");
         Thread.sleep(3000);
-        WebElement populationHeader = driver.findElement(By.xpath("//span[normalize-space()='Population (million)']"));
-        populationHeader.click();
-        List<WebElement> population = driver.findElements(By.xpath("(//table)[2]/tbody/tr/td[3]"));
-        ArrayList<Float> numbers = new ArrayList<>();
-        for (WebElement webElement : population) {
-            numbers.add(Float.parseFloat(webElement.getText()));
+        getDriver().findElement(By.xpath("//span[normalize-space()='Population (million)']")).click();
+        List<WebElement> population = getDriver().findElements(By.xpath("(//table)[2]/tbody/tr/td[3]"));
+        List<Float> numbers = new ArrayList<>();
+        for (WebElement el : population) {
+            numbers.add(Float.parseFloat(el.getText()));
         }
-        boolean flag = true;
-        for (int i = 0; i < numbers.size()-1; i++) {
-            if (numbers.get(i) > numbers.get(i + 1)) {
-                flag = false;
-                break;
-            }
+        for (int i = 0; i < numbers.size() - 1; i++) {
+            Assert.assertTrue(numbers.get(i) <= numbers.get(i + 1));
         }
-        Assert.assertTrue(flag);
     }
 }
