@@ -1,7 +1,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="SmokeTestSuite">
     <listeners>
-        <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
+        <listener class-name="utils.RetryTransformer" />
     </listeners>
     <test name="SmokeTest" parallel="classes" thread-count="3">
         <parameter name="browser" value="chrome"/>

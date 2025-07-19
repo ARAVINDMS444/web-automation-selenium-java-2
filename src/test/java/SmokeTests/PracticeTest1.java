@@ -5,16 +5,16 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.LoginPage;
 import utils.DataProviders;
+import utils.TestData;
 
 @Listeners(utils.Listeners.class)
 
 public class PracticeTest1 extends BaseTest {
 
-
     @Test(priority = 1)
     public void verifyLoginLogoutFlow() throws InterruptedException {
         LoginPage loginPage = new LoginPage(getDriver());
-        loginPage.verifyLoginLogoutFlow("tomsmith", "SuperSecretPassword!");
+        loginPage.verifyLoginLogoutFlow(TestData.username, TestData.password);
     }
 
     @Test(priority = 2 , dataProvider = "LoginData", dataProviderClass = DataProviders.class)
