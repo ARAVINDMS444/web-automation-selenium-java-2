@@ -30,6 +30,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven
 
+      - name: Check Code Formatting with Spotless
+        run: mvn spotless:check
+
       - name: Run All TestNG Suites from TestSuites Folder
         run: |
           SUITES=$(find src/test/resources/TestSuites -name "*.xml" | paste -sd "," -)
