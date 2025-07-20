@@ -3,6 +3,8 @@ package regressionTests;
 import baseTest.BaseTest;
 import java.time.Duration;
 import java.util.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.*;
@@ -10,9 +12,11 @@ import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import utils.ActionsUtil;
+import utils.Generators;
 
 @Listeners(utils.Listeners.class)
 public class SeleniumActions extends BaseTest {
+  private static final Logger logger = LogManager.getLogger(SeleniumActions.class);
 
   private WebDriverWait wait;
   private ActionsUtil actionsUtil;
@@ -30,12 +34,13 @@ public class SeleniumActions extends BaseTest {
     element.click();
     Thread.sleep(3000);
     actionsUtil.sendKeysToAlert("Test");
-    Assert.assertEquals(actionsUtil.getAlertText(), "Hi there, what's your name?");
+    actionsUtil.assertTextEquals(actionsUtil.getAlertText(), "Hi there, what's your name?");
     actionsUtil.acceptAlert();
     Thread.sleep(3000);
     element.click();
     actionsUtil.dismissAlert();
     Thread.sleep(3000);
+    logger.debug("Alerts test completed successfully");
   }
 
   @Test(priority = 2)
@@ -153,7 +158,8 @@ public class SeleniumActions extends BaseTest {
   public void testModals() {
     openUrl("https://practice-automation.com/modals/");
     getDriver().findElement(By.id("formModal")).click();
-    wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("g1051-name"))).sendKeys("Test");
+    wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("g1051-name")))
+        .sendKeys(Generators.generateRandomStringAndNumbersLowercase(8));
     getDriver()
         .findElement(By.xpath("//div[@id='popmake-674']//button[@aria-label='Close']"))
         .click();
