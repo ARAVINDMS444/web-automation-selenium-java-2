@@ -1,6 +1,8 @@
 package regressionTests;
 
 import baseTest.BaseTest;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.Duration;
 import java.util.*;
 import org.apache.logging.log4j.LogManager;
@@ -187,6 +189,31 @@ public class SeleniumActions extends BaseTest {
     }
     for (int i = 0; i < numbers.size() - 1; i++) {
       Assert.assertTrue(numbers.get(i) <= numbers.get(i + 1));
+    }
+  }
+
+  @Test(priority = 15)
+  public void testBrokenLinks() {
+    openUrl("https://practice-automation.com/broken-links/");
+    List<WebElement> links = getDriver().findElements(By.tagName("a"));
+
+    for (WebElement link : links) {
+      String url = link.getAttribute("href");
+
+      try {
+        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        connection.setConnectTimeout(5000);
+        connection.connect();
+
+        int statusCode = connection.getResponseCode();
+
+        if (statusCode >= 400) {
+          System.out.println("❌ Broken Link: " + url);
+        }
+
+      } catch (Exception e) {
+        System.out.println("⚠️ Error checking link: " + url + " | Message: " + e.getMessage());
+      }
     }
   }
 }
