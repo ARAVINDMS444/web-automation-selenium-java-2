@@ -208,7 +208,7 @@ public class SeleniumActions extends BaseTest {
         int statusCode = connection.getResponseCode();
 
         if (statusCode >= 400) {
-          System.out.println("❌ Broken Link: " + url);
+          // System.out.println("❌ Broken Link: " + url);
         }
 
       } catch (Exception e) {
