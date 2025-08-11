@@ -200,15 +200,18 @@ public class SeleniumActions extends BaseTest {
     for (WebElement link : links) {
       String url = link.getAttribute("href");
 
+      if (url == null || url.trim().isEmpty()) {
+        continue;
+      }
+
       try {
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         connection.setConnectTimeout(5000);
         connection.connect();
 
         int statusCode = connection.getResponseCode();
-
         if (statusCode >= 400) {
-          System.out.println("❌ Broken Link: " + url);
+          System.out.println("❌ Broken Link: " + url + " | Status: " + statusCode);
         }
 
       } catch (Exception e) {
