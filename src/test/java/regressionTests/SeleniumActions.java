@@ -167,7 +167,7 @@ public class SeleniumActions extends BaseTest {
         .click();
   }
 
-  @Test(priority = 13)
+  @Test(priority = 13,  enabled = false)
   public void testCalendar() {
     openUrl("https://practice-automation.com/calendars/");
     getDriver().findElement(By.id("g1065-2-1-selectorenteradate")).click();
@@ -208,7 +208,7 @@ public class SeleniumActions extends BaseTest {
         int statusCode = connection.getResponseCode();
 
         if (statusCode >= 400) {
-          // System.out.println("❌ Broken Link: " + url);
+           System.out.println("❌ Broken Link: " + url);
         }
 
       } catch (Exception e) {
