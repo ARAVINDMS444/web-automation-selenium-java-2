@@ -12,7 +12,7 @@ import org.testng.annotations.Test;
 import utils.Helpers;
 
 @Listeners(utils.Listeners.class)
-public class PracticeTest3 extends BaseTest {
+public class SortTest extends BaseTest {
 
   @Test(priority = 1)
   public void verifyPriceOrderByAscending() throws InterruptedException {
@@ -23,11 +23,10 @@ public class PracticeTest3 extends BaseTest {
     select.selectByValue("lohi");
     Thread.sleep(2000);
     List<WebElement> prices = getDriver().findElements(By.xpath("//div[contains(text(),'$')]"));
-    int size = prices.size();
     ArrayList<Float> pricesNumeric = new ArrayList<>();
 
-    for (int i = 0; i < size; i++) {
-      String price = prices.get(i).getText();
+    for (WebElement webElement : prices) {
+      String price = webElement.getText();
       float priceInt = Float.parseFloat(price.replace("$", ""));
       pricesNumeric.add(priceInt);
     }
@@ -44,11 +43,10 @@ public class PracticeTest3 extends BaseTest {
     select.selectByValue("hilo");
     Thread.sleep(2000);
     List<WebElement> prices = getDriver().findElements(By.xpath("//div[contains(text(),'$')]"));
-    int size = prices.size();
     ArrayList<Float> pricesNumeric = new ArrayList<>();
 
-    for (int i = 0; i < size; i++) {
-      String price = prices.get(i).getText();
+    for (WebElement webElement : prices) {
+      String price = webElement.getText();
       float priceInt = Float.parseFloat(price.replace("$", ""));
       pricesNumeric.add(priceInt);
     }
@@ -66,11 +64,10 @@ public class PracticeTest3 extends BaseTest {
     Thread.sleep(2000);
     List<WebElement> productsElements =
         getDriver().findElements(By.xpath("//div[@class='inventory_item_name']"));
-    int size = productsElements.size();
     ArrayList<String> products = new ArrayList<>();
 
-    for (int i = 0; i < size; i++) {
-      String product = productsElements.get(i).getText();
+    for (WebElement productsElement : productsElements) {
+      String product = productsElement.getText();
       products.add(product);
     }
 
@@ -87,11 +84,10 @@ public class PracticeTest3 extends BaseTest {
     Thread.sleep(2000);
     List<WebElement> productsElements =
         getDriver().findElements(By.xpath("//div[@class='inventory_item_name']"));
-    int size = productsElements.size();
     ArrayList<String> products = new ArrayList<>();
 
-    for (int i = 0; i < size; i++) {
-      String product = productsElements.get(i).getText();
+    for (WebElement productsElement : productsElements) {
+      String product = productsElement.getText();
       products.add(product);
     }
 
