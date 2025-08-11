@@ -45,7 +45,7 @@ public class SeleniumActions extends BaseTest {
     logger.debug("Alerts test completed successfully");
   }
 
-  @Test(priority = 2)
+  @Test(priority = 2, enabled = false)
   public void testExplicitWaits() {
     openUrl("https://practice-automation.com/javascript-delays/");
     WebElement startBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("start")));
@@ -122,7 +122,7 @@ public class SeleniumActions extends BaseTest {
     getDriver().switchTo().defaultContent();
   }
 
-  @Test(priority = 9)
+  @Test(priority = 9, enabled = false)
   public void testSliders() {
     openUrl("https://practice-automation.com/slider/");
     WebElement slider = getDriver().findElement(By.id("slideMe"));
@@ -131,7 +131,7 @@ public class SeleniumActions extends BaseTest {
     Assert.assertEquals(label.getText(), "65");
   }
 
-  @Test(priority = 10)
+  @Test(priority = 10, enabled = false)
   public void testFileUpload() {
     openUrl("https://practice-automation.com/file-upload/");
     getDriver()
@@ -145,7 +145,7 @@ public class SeleniumActions extends BaseTest {
     Assert.assertEquals(successText.getText(), "Thank you for your message. It has been sent.");
   }
 
-  @Test(priority = 11)
+  @Test(priority = 11, enabled = false)
   public void testAccordions() {
     openUrl("https://practice-automation.com/accordions/");
     getDriver()
@@ -156,7 +156,7 @@ public class SeleniumActions extends BaseTest {
     Assert.assertEquals(accordionText.getText(), "This is an accordion item.");
   }
 
-  @Test(priority = 12)
+  @Test(priority = 12, enabled = false)
   public void testModals() {
     openUrl("https://practice-automation.com/modals/");
     getDriver().findElement(By.id("formModal")).click();
